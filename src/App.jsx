@@ -3,7 +3,7 @@ import Routerconfig from './config/router/Routerconfig'
 
 const App = () => {
   return (
-    <Routerconfig/>
+    <Routerconfig />
   )
 }
 

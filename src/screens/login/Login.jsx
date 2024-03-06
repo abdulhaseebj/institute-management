@@ -12,26 +12,20 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { loginUser } from '../../config/firebase/Firebasemethod';
+import { loginUser, signUpUser } from '../../config/firebase/Firebasemethod';
+import { useNavigate } from 'react-router-dom';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 
 
 const defaultTheme = createTheme();
 
+
 export default function SignIn() {
+  // usenavigate 
+  const navigate = useNavigate()
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -39,6 +33,31 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password'),
     });
+    //  signUpUser({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    //   type: 'student'
+    // }).then((res)=>{
+    //   console.log(res);
+    // }).catch((err)=>{
+    //   console.log(err);
+    // })
+    loginUser({
+      email: data.get('email'),
+      password: data.get('password'),
+    }).then((res) => {
+      // console.log(res.type);
+      if (res.type === 'student') {
+        navigate('/student')
+      } else {
+        navigate('/admin')
+        
+      }
+
+    }).catch((err) => {
+      console.log(err);
+    })
+
   };
 
   return (
@@ -90,18 +109,18 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-             LogIn
+              LogIn
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/admission" variant="body2">
+                <Link to='admission'>si</Link>
+                <Link to='admission'  variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
