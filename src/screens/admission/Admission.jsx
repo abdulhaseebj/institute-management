@@ -2,9 +2,10 @@ import { FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Outlined
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import React from 'react'
+import React, { useState } from 'react'
 import FirstComponent from '../../components/Date'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useRef } from 'react';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -22,29 +23,73 @@ const VisuallyHiddenInput = styled('input')({
 
 
 const Admission = () => {
+  // useRef
+  const firstNameRef = useRef()
+  const lastNameRef = useRef()
+  const emailRef = useRef()
+  const passwordRef = useRef()
+
+  // show password function
   const [showPassword, setShowPassword] = React.useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  // date function
+  const [date, setDate] = useState()
+  const handleDateChange = (date) => {
+    // console.log('Selected Date', date);
+    setDate(date)
+  };
+
+  // get value from selected feild
+  const [gender, setGenders] = useState('');
+  const [course, setCourse] = useState('');
+  const handleChange = (event) => {
+    const selectedValue = event.target.value;
+    // console.log('Selected Value:', selectedValue);
+
+    const fieldName = event.target.name;
+    if (event.target.name === 'gender') {
+      setGenders(selectedValue);
+    } else if (event.target.name === 'course') {
+      setCourse(selectedValue);
+    }
+  }
+
+  // register and add user data in firstore
+  function admission(e) {
+    e.preventDefault()
+    console.log(firstNameRef.current.value);
+    console.log(lastNameRef.current.value);
+    console.log(emailRef.current.value);
+    console.log(passwordRef.current.value);
+    console.log(course);
+    console.log(gender);
+    console.log(date);
+
+
+  }
   return (
-    <form >
+    <form onSubmit={admission}>
       <TextField
         id="outlined-basic"
         label="First Name"
         variant="outlined"
+        inputRef={firstNameRef}
       />
       <TextField
         id="outlined-basic"
         label="Last Name"
         variant="outlined"
+        inputRef={lastNameRef}
       />
       <TextField
         id="outlined-basic"
         label="Email"
         variant="outlined"
+        inputRef={emailRef}
       />
 
       <FormControl sx={{ m: 0, width: '25ch' }} variant="outlined">
@@ -65,38 +110,45 @@ const Admission = () => {
             </InputAdornment>
           }
           label="Password"
+          inputRef={passwordRef}
+
         />
       </FormControl>
+      {/* <FirstComponent onDateChange={handleDateChange} /> */}
+      <FirstComponent onDateChange={handleDateChange} />
 
-      <FirstComponent />
+      {/* <FirstComponent /> */}
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          // value={age}
-          label="Age"
-        // onChange={handleChange}
+          value={gender}
+          label="Gender"
+          name="gender"
+          onChange={handleChange}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={"Male"}>Male</MenuItem>
+          <MenuItem value={"Female"}>Female</MenuItem>
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <InputLabel id="demo-simple-select-label">Course</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          // value={age}
-          label="Age"
-        // onChange={handleChange}
+          value={course}
+          label="Course"
+          name="course"
+          onChange={handleChange}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={'Web Development'}>Web Development</MenuItem>
+          <MenuItem value={'Graphics Design'}>Graphics Design</MenuItem>
+          <MenuItem value={'Mobile Development'}>Mobile Development</MenuItem>
+          <MenuItem value={'Flutter Development'}>Flutter Development</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl >
+
       <Button
         component="label"
         role={undefined}
@@ -107,6 +159,8 @@ const Admission = () => {
         Upload file
         <VisuallyHiddenInput type="file" />
       </Button>
+
+      <Button type='submit' variant="contained">Resister</Button>
     </form>
   )
 }
