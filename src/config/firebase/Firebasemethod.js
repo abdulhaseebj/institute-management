@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import app from "./firebaseconfig.js";
+import app, { storage } from "./firebaseconfig.js";
 import {
   getFirestore,
   collection,
@@ -16,6 +16,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const auth = getAuth(app);
 
@@ -146,17 +147,37 @@ const updateDocument = async (obj, id, name) => {
 }
 
 // const files = profile.files[0]
-const addImageToStorage = (files, email) => {
+// const addImageToStorage = (files, email) => {
+//   return new Promise((resolve, reject) => {
+//     console.log(files);
+//     const storageRef = ref(storage, email);
+//     uploadBytes(storageRef, files).then(() => {
+//       getDownloadURL(storageRef).then((url) => {
+//         console.log(url);
+//         resolve(url);
+//         reject('Error found');
+//       });
+//     });
+//   })
+// }
+
+const addImageToStorage = (file, email) => {
   return new Promise((resolve, reject) => {
-    const storageRef = ref(storage, email.value);
-    uploadBytes(storageRef, files).then(() => {
+    console.log(file);
+    const storageRef = ref(storage, email + '/' + file.name); 
+    uploadBytes(storageRef, file).then(() => {
       getDownloadURL(storageRef).then((url) => {
         console.log(url);
         resolve(url);
-        reject('Error found');
+      }).catch(err => {
+        reject(err); 
       });
+    }).catch(err => {
+      reject(err); 
     });
-  })
-}
+  });
+};
+
+
 
 export { auth, db, signUpUser, loginUser, signOutUser, sendData, getData, getAllData, deleteDocument, updateDocument, addImageToStorage };

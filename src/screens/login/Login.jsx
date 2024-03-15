@@ -12,8 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { loginUser, signUpUser } from '../../config/firebase/Firebasemethod';
 import { useNavigate } from 'react-router-dom';
+import { loginUser, signUpUser } from '../../config/firebase/firebasemethod';
 
 
 
@@ -36,7 +36,7 @@ export default function SignIn() {
     //  signUpUser({
     //   email: data.get('email'),
     //   password: data.get('password'),
-    //   type: 'student'
+    //   type: 'admin'
     // }).then((res)=>{
     //   console.log(res);
     // }).catch((err)=>{
@@ -46,7 +46,7 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password'),
     }).then((res) => {
-      // console.log(res.type);
+      console.log(res.type);
       if (res.type === 'student') {
         navigate('/student')
       } else {

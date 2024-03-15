@@ -3,7 +3,7 @@ import Loader from "../../components/Loader";
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../Firebase/firebaseMethod";
+import { auth } from "../firebase/firebaseconfig"
 
 function ProtectedRoutes(props) {
   const { component } = props;

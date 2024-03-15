@@ -6,6 +6,10 @@ import React, { useState } from 'react'
 import FirstComponent from '../../components/Date'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRef } from 'react';
+import { addImageToStorage, signUpUser } from '../../config/firebase/firebasemethod';
+import { useNavigate } from 'react-router-dom';
+import { getDownloadURL, uploadBytes } from 'firebase/storage';
+import { storage } from '../../config/firebase/firebaseconfig';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -28,6 +32,10 @@ const Admission = () => {
   const lastNameRef = useRef()
   const emailRef = useRef()
   const passwordRef = useRef()
+  const image = useRef()
+
+  // useNavigate
+  const navigate = useNavigate()
 
   // show password function
   const [showPassword, setShowPassword] = React.useState(false);
@@ -58,110 +66,141 @@ const Admission = () => {
     }
   }
 
+
   // register and add user data in firstore
   function admission(e) {
     e.preventDefault()
-    console.log(firstNameRef.current.value);
-    console.log(lastNameRef.current.value);
-    console.log(emailRef.current.value);
-    console.log(passwordRef.current.value);
-    console.log(course);
-    console.log(gender);
-    console.log(date);
+    const names = `${firstNameRef.current.value} ${lastNameRef.current.value}`;
+
+
+    const files = image.current.files[0];
+    const email = emailRef.current.value;
+
+    addImageToStorage(files, email)
+      .then((url) => {
+        console.log("Image URL:", url);
+
+        signUpUser({
+          names: names,
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+          type: 'student',
+          cource: course,
+          gender: gender,
+          date: date,
+          imgUrl: url
+        }).then((res) => {
+          console.log(res);
+          navigate('/')
+        }).catch((err) => {
+          console.log(err);
+        })
+      })
+      .catch((err) => {
+        console.log("Error:", err);
+      });
+
 
 
   }
+
+
   return (
-    <form onSubmit={admission}>
-      <TextField
-        id="outlined-basic"
-        label="First Name"
-        variant="outlined"
-        inputRef={firstNameRef}
-      />
-      <TextField
-        id="outlined-basic"
-        label="Last Name"
-        variant="outlined"
-        inputRef={lastNameRef}
-      />
-      <TextField
-        id="outlined-basic"
-        label="Email"
-        variant="outlined"
-        inputRef={emailRef}
-      />
-
-      <FormControl sx={{ m: 0, width: '25ch' }} variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-          inputRef={passwordRef}
-
+    <>
+      <form onSubmit={admission}>
+        <TextField
+          id="outlined-basic"
+          label="First Name"
+          variant="outlined"
+          inputRef={firstNameRef}
         />
-      </FormControl>
-      {/* <FirstComponent onDateChange={handleDateChange} /> */}
-      <FirstComponent onDateChange={handleDateChange} />
+        <TextField
+          id="outlined-basic"
+          label="Last Name"
+          variant="outlined"
+          inputRef={lastNameRef}
+        />
+        <TextField
+          id="outlined-basic"
+          label="Email"
+          variant="outlined"
+          inputRef={emailRef}
+        />
 
-      {/* <FirstComponent /> */}
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={gender}
-          label="Gender"
-          name="gender"
-          onChange={handleChange}
+        <FormControl sx={{ m: 0, width: '25ch' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? 'text' : 'password'}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+            inputRef={passwordRef}
+
+          />
+        </FormControl>
+        {/* <FirstComponent onDateChange={handleDateChange} /> */}
+        <FirstComponent onDateChange={handleDateChange} />
+
+        {/* <FirstComponent /> */}
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={gender}
+            label="Gender"
+            name="gender"
+            onChange={handleChange}
+          >
+            <MenuItem value={"Male"}>Male</MenuItem>
+            <MenuItem value={"Female"}>Female</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Course</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={course}
+            label="Course"
+            name="course"
+            onChange={handleChange}
+          >
+            <MenuItem value={'Web Development'}>Web Development</MenuItem>
+            <MenuItem value={'Graphics Design'}>Graphics Design</MenuItem>
+            <MenuItem value={'Mobile Development'}>Mobile Development</MenuItem>
+            <MenuItem value={'Flutter Development'}>Flutter Development</MenuItem>
+          </Select>
+        </FormControl >
+        <input type="file" ref={image} />
+
+
+        {/* <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
         >
-          <MenuItem value={"Male"}>Male</MenuItem>
-          <MenuItem value={"Female"}>Female</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Course</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={course}
-          label="Course"
-          name="course"
-          onChange={handleChange}
-        >
-          <MenuItem value={'Web Development'}>Web Development</MenuItem>
-          <MenuItem value={'Graphics Design'}>Graphics Design</MenuItem>
-          <MenuItem value={'Mobile Development'}>Mobile Development</MenuItem>
-          <MenuItem value={'Flutter Development'}>Flutter Development</MenuItem>
-        </Select>
-      </FormControl >
+          Upload file
+          <VisuallyHiddenInput type="file"  />
+        </Button> */}
 
-      <Button
-        component="label"
-        role={undefined}
-        variant="contained"
-        tabIndex={-1}
-        startIcon={<CloudUploadIcon />}
-      >
-        Upload file
-        <VisuallyHiddenInput type="file" />
-      </Button>
+        <Button type='submit' variant="contained">Resister</Button>
+      </form>
 
-      <Button type='submit' variant="contained">Resister</Button>
-    </form>
+    </>
   )
 }
 

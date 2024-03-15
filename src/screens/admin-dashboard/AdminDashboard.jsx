@@ -5,7 +5,7 @@ import Allcource from './allcource/Allcource'
 import Allstudent from './allstudent/Allstudent'
 import Singlecource from './singlecource/Singlecource'
 import PersistentDrawerLeft from '../../components/Drawer'
-import { Box } from '@mui/material'
+import Singlestudent from './singlestudent/Singlestudent'
 
 const Admin = () => {
   return (
@@ -16,6 +16,8 @@ const Admin = () => {
           <Route path='/' element={<Addcource />} />
           <Route path='/allcourse' element={<Allcource />} />
           <Route path='/allstudents' element={<Allstudent />} />
+          <Route path='/allstudents/students/:id' element={<Singlestudent />} />
+          {/* <Route path="/allstudents/student/:id" element={<SingleStudent />} /> */}
           <Route path='/singlecourse' element={<Singlecource />} />
 
         </Routes>
