@@ -97,12 +97,12 @@ const sendData = (obj, colName) => {
 };
 
 //get data with id from firestore
-const getData = (colName) => {
+const getData = (colName,obj) => {
   return new Promise(async (resolve, reject) => {
     const dataArr = []
     const q = query(
       collection(db, colName),
-      where("id", "==", auth.currentUser.uid)
+      where("uid", "==", obj.uid)
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -164,16 +164,16 @@ const updateDocument = async (obj, id, name) => {
 const addImageToStorage = (file, email) => {
   return new Promise((resolve, reject) => {
     console.log(file);
-    const storageRef = ref(storage, email + '/' + file.name); 
+    const storageRef = ref(storage, email + '/' + file.name);
     uploadBytes(storageRef, file).then(() => {
       getDownloadURL(storageRef).then((url) => {
         console.log(url);
         resolve(url);
       }).catch(err => {
-        reject(err); 
+        reject(err);
       });
     }).catch(err => {
-      reject(err); 
+      reject(err);
     });
   });
 };

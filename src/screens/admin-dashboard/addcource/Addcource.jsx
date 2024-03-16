@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select, TextField, Button } from '@mui/material'
 import React, { useRef, useState } from 'react'
-import { sendData } from '../../../config/firebase/Firebasemethod';
+import { sendData } from '../../../config/firebase/firebasemethod';
 import { useNavigate } from 'react-router-dom';
 
 const Addcource = () => {
