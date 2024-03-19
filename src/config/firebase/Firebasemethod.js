@@ -97,12 +97,29 @@ const sendData = (obj, colName) => {
 };
 
 //get data with id from firestore
-const getData = (colName,obj) => {
+const getData = (colName, obj) => {
   return new Promise(async (resolve, reject) => {
     const dataArr = []
     const q = query(
       collection(db, colName),
       where("uid", "==", obj.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      dataArr.push(doc.data())
+      resolve(dataArr);
+    });
+    reject("error occured");
+  });
+};
+
+
+const getStudentData = (colName) => {
+  return new Promise(async (resolve, reject) => {
+    const dataArr = []
+    const q = query(
+      collection(db, colName),
+      where("uid", "==", auth.currentUser.uid)
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -180,4 +197,4 @@ const addImageToStorage = (file, email) => {
 
 
 
-export { auth, db, signUpUser, loginUser, signOutUser, sendData, getData, getAllData, deleteDocument, updateDocument, addImageToStorage };
+export { auth, db, signUpUser, loginUser, signOutUser, sendData, getData, getStudentData, getAllData, deleteDocument, updateDocument, addImageToStorage };

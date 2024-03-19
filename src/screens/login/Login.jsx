@@ -51,7 +51,7 @@ export default function SignIn() {
         navigate('/student')
       } else {
         navigate('/admin')
-        
+
       }
 
     }).catch((err) => {
@@ -113,10 +113,10 @@ export default function SignIn() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to='admission'>si</Link>
-                <Link to='admission'  variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Typography variant="body2">
+                  {"Don't have an account? "}
+                  <Button onClick={() => navigate('/admission')} variant="text">Sign Up</Button>
+                </Typography>
               </Grid>
             </Grid>
           </Box>
