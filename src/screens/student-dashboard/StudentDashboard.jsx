@@ -3,6 +3,7 @@ import { getStudentData, signOutUser } from '../../config/firebase/firebasemetho
 import { auth } from '../../config/firebase/firebaseconfig';
 import { useNavigate } from 'react-router-dom';
 import ActionAreaCard from '../../components/Singlestudentcard';
+import ResponsiveAppBar from '../../components/Navbar';
 
 const Student = () => {
   // useState
@@ -15,7 +16,7 @@ const Student = () => {
       .then((res) => {
         console.log(res);
         setUserData(res)
-        console.log(auth.currentUser.uid);
+        // console.log(auth.currentUser.uid);
 
       })
       .catch((err) => {
@@ -34,13 +35,14 @@ const Student = () => {
       })
 
   }
+  
 
   return (
     <>
+      <ResponsiveAppBar logout={logOut} />
       {userData.length > 0 ? userData.map((item, index) => {
         return <ActionAreaCard key={index} userImg={item.imgUrl} userName={item.names} course={item.cource} gender={item.gender} date={item.date} />
       }) : <h1>loading..</h1>}
-      <button onClick={logOut}>LogOut</button>
     </>
   )
 }

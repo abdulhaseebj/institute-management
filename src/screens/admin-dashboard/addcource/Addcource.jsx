@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select, TextField, Button } from '@mui/material'
 import React, { useRef, useState } from 'react'
-import { sendData, signOutUser } from '../../../config/firebase/firebasemethod';
+import { sendData } from '../../../config/firebase/firebasemethod';
 import { useNavigate } from 'react-router-dom';
 
 const Addcource = () => {
@@ -45,16 +45,6 @@ const Addcource = () => {
 
 
   }
-// logOut function
-  function logOut() {
-    signOutUser().then((res) => {
-      console.log(res);
-      navigate('/')
-    })
-      .catch((err) => {
-        console.log(err);
-      })
-  }
 
   return (
     <>
@@ -94,7 +84,6 @@ const Addcource = () => {
           <Button type='submit' variant="contained">Add Course</Button>
         </div>
       </form>
-      <button onClick={logOut}>Logout</button>
     </>
   )
 }
