@@ -46,7 +46,7 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password'),
     }).then((res) => {
-      console.log(res.type);
+      // console.log(res.type);
       if (res.type === 'student') {
         navigate('/student')
       } else {

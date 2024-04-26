@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { getStudentData, signOutUser } from '../../config/firebase/firebasemethod';
+import { getStudentData,signOutUser } from '../../config/firebase/firebasemethod';
 import { auth } from '../../config/firebase/firebaseconfig';
 import { useNavigate } from 'react-router-dom';
 import ActionAreaCard from '../../components/Singlestudentcard';
 import ResponsiveAppBar from '../../components/Navbar';
+import { onAuthStateChanged } from "firebase/auth";
+import Loader from '../../components/Loader';
 
 const Student = () => {
   // useState
@@ -12,16 +14,25 @@ const Student = () => {
   const navigate = useNavigate()
   // // get data from firestore
   useEffect(() => {
-    getStudentData("users")
-      .then((res) => {
-        console.log(res);
-        setUserData(res)
-        // console.log(auth.currentUser.uid);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log(uid);
+        getStudentData("users",{user})
+        .then((res) => {
+              // console.log(res);
+              setUserData(res)
+        
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+      } else {
+        console.log('err');
+      }
+    });
 
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+   
   }, []);
 
   // logOut function
@@ -42,7 +53,7 @@ const Student = () => {
       <ResponsiveAppBar logout={logOut} />
       {userData.length > 0 ? userData.map((item, index) => {
         return <ActionAreaCard key={index} userImg={item.imgUrl} userName={item.names} course={item.cource} gender={item.gender} date={item.date} />
-      }) : <h1>loading..</h1>}
+      }) : <Loader/>}
     </>
   )
 }

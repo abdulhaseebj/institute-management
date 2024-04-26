@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
+
 const auth = getAuth(app);
 
 //initialize firestore database
@@ -112,14 +113,12 @@ const getData = (colName, obj) => {
     reject("error occured");
   });
 };
-
-
-const getStudentData = (colName) => {
+const getStudentData = (colName, obj) => {
   return new Promise(async (resolve, reject) => {
     const dataArr = []
     const q = query(
       collection(db, colName),
-      where("uid", "==", auth.currentUser.uid)
+      where("uid", "==", obj.user.uid)
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -197,4 +196,4 @@ const addImageToStorage = (file, email) => {
 
 
 
-export { auth, db, signUpUser, loginUser, signOutUser, sendData, getData, getStudentData, getAllData, deleteDocument, updateDocument, addImageToStorage };
+export { auth, db, signUpUser, loginUser, signOutUser, sendData,getStudentData, getData, getAllData, deleteDocument, updateDocument, addImageToStorage };
