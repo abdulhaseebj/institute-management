@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import { Button, CardActionArea } from '@mui/material';
 
 export default function ActionAreaCard({ userImg, userName, date, course, gender }) {
   return (
@@ -29,6 +29,7 @@ export default function ActionAreaCard({ userImg, userName, date, course, gender
           <Typography gutterBottom variant="h6" component="div">
             DOB : {date}
           </Typography>
+          <Button type='submit' variant="contained">Delete</Button>
 
 
         </CardContent>
